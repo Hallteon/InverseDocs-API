@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
-from inverse.data import DJANGO_SECRET_KEY, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
+from inverse.config import DJANGO_SECRET_KEY, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent

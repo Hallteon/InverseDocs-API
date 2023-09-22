@@ -14,15 +14,9 @@ class IsEmployeeOrReadOnly(permissions.BasePermission):
 
 class IsCreatorOrReciever(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-            if request.user.is_authentificated:
-                 return self.request.user in obj.recievers.all() or obj.creator.pk == self.request.user.pk
-
-            return False
+        return request.user in obj.recievers.all() or obj.creator.pk == request.user.pk
     
 
 class IsRecieverAndRole(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
-            if request.user.is_authenticated:
-                return self.request.user.role.pk in obj.status.roles.all() and self.request.user.pk == obj.recievers.all().last().pk
-
-            return False
+        return request.user.role.pk in obj.status.roles.all() and request.user.pk == obj.recievers.all().last().pk

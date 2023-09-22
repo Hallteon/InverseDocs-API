@@ -1,4 +1,6 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
+from rest_framework import views
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.db.models import Q
@@ -113,12 +115,13 @@ class DocumentAPIDetailView(generics.RetrieveUpdateDestroyAPIView):
         return Response([], status=status.HTTP_404_NOT_FOUND)
     
 
-class DocumentAPIApproveView(generics.UpdateAPIView):
+class DocumentAPIApproveView(generics.UpdateAPIView, views.APIView):
     serializer_class = DocumentWriteSerializer
-    permission_classes = [IsRecieverAndRole]
+    permission_classes = [IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
-        obj = Document.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(Document.objects.all(), pk=self.kwargs['pk'])
+        # self.check_object_permissions(request=request, obj=obj)
         
         if obj.status.status_id < 4 and obj.status.status_id != 0:
             last_doc_history = obj.history.last()
@@ -149,10 +152,10 @@ class DocumentAPIApproveView(generics.UpdateAPIView):
 
 class DocumentAPIAnnuleView(generics.UpdateAPIView):
     serializer_class = DocumentWriteSerializer
-    permission_classes = [IsRecieverAndRole]
+    permission_classes = [IsAuthenticated]
 
     def update(self, request, *args, **kwargs):
-        obj = Document.objects.get(pk=self.kwargs['pk'])
+        obj = get_object_or_404(Document.objects.all(), pk=self.kwargs['pk'])
         
         if obj.status.status_id == 3:
             obj.status = DocumentStatus.objects.get(status_id=0)
